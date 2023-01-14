@@ -36,7 +36,7 @@ class JwtAuthorizationFilter(
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
         val pathParts = request.requestURI.split("/").filter { it.isNotBlank() }
-        return pathParts[0] == "login"
+        return pathParts.isNotEmpty() && pathParts[0] == "login"
     }
 
 }

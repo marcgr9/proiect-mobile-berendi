@@ -9,6 +9,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import ro.marc.backend.dto.EntityDTO
 import ro.marc.backend.security.User
 import java.util.Date
 
@@ -33,4 +34,16 @@ data class Entity(
     @Column(name = "is_favourite")
     val isFavourite: Boolean = false,
 
-)
+) {
+
+    companion object {
+        fun from(dto: EntityDTO, user: User) = Entity(
+            owner = user,
+            name = dto.name,
+            quantity = dto.quantity,
+            date = dto.date,
+            isFavourite = dto.isFavourite,
+        )
+    }
+
+}
