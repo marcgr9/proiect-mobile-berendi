@@ -18,6 +18,10 @@ class Controller(
     private val repository: Repository
 ) {
 
+    @GetMapping("/me")
+    fun me(@AuthenticationPrincipal user: User)
+        = BusinessPayload<Void>(BusinessMessage.OK)
+
     @GetMapping("/")
     fun getAll(@AuthenticationPrincipal user: User)
         = BusinessPayload(
@@ -33,7 +37,7 @@ class Controller(
         )
 
     @PatchMapping("/{id}")
-    fun patch(@AuthenticationPrincipal user: User, @PathVariable("id") entityId: String, data: EntityDTO): BusinessPayload<Void> {
+    fun patch(@AuthenticationPrincipal user: User, @PathVariable("id") entityId: String, @RequestBody data: EntityDTO): BusinessPayload<Void> {
         repository.update(entityId.toLong(), data.name, data.quantity, data.date, data.isFavourite)
         return BusinessPayload(BusinessMessage.OK)
     }
