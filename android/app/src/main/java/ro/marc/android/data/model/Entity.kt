@@ -4,7 +4,7 @@ import java.util.*
 
 data class Entity(
     val localId: Long?,
-    val id: Long?,
+    var id: Long?,
     val name: String,
     val quantity: Int,
     val date: Date,

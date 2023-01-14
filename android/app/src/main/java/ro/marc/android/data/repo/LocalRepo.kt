@@ -27,13 +27,14 @@ class LocalRepo(
         return Utils.asEntity(dao.getByLocalId(localId))
     }
 
-    fun updateByLocalId(localId: Long, entity: Entity): Entity {
+    fun updateByLocalId(localId: Long, entity: Entity, status: LocalEntityStatus): Entity {
         dao.updateByLocalId(
             localId,
             name = entity.name,
             quantity = entity.quantity,
             date = entity.date,
             fav = entity.isFavourite,
+            status = status
         )
 
         return Utils.asEntity(dao.getByLocalId(localId))
@@ -41,6 +42,18 @@ class LocalRepo(
 
     fun clear() {
         dao.removeAll()
+    }
+
+    fun getUncommitted() = dao.getUncommitted()
+
+    fun getUpdated() = dao.getUpdated()
+
+    fun setCommitted(localId: Long) {
+        dao.setCommitted(localId)
+    }
+
+    fun setId(id: Long, localId: Long) {
+        dao.setId(id, localId)
     }
 
 }

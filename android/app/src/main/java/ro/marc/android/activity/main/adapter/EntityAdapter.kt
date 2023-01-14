@@ -43,6 +43,12 @@ class EntityAdapter(
 
     override fun getItemCount(): Int = _entities.size
 
+    fun setIdOf(localId: Long, id: Long) {
+        _entities.find {
+            it.localId == localId
+        }?.id = id
+    }
+
     class RequestViewHolder(private val entityItem: CompItemBinding) : RecyclerView.ViewHolder(entityItem.root) {
 
         fun bind(entity: Entity) {

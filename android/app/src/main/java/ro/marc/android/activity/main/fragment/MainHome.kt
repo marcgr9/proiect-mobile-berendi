@@ -13,6 +13,7 @@ import ro.marc.android.activity.main.MainVM
 import ro.marc.android.activity.main.adapter.EntityAdapter
 import ro.marc.android.data.api.CallStatus
 import ro.marc.android.data.api.CallStatus.Companion.LayoutAffectedByApiCall
+import ro.marc.android.data.api.dto.EntityDTO
 import ro.marc.android.data.db.entity.LocalEntityStatus
 import ro.marc.android.data.model.Entity
 import ro.marc.android.databinding.FragMainHomeBinding
@@ -51,6 +52,7 @@ class MainHome: Fragment() {
 
         vm.entity = null
         populate()
+        attachReconnectedListener()
 
         return binding.root
     }
@@ -76,11 +78,54 @@ class MainHome: Fragment() {
                 }
             }
             false -> {
-                vm.clearLocalEntities()
                 entitiesAdapter.clearEntities()
                 entitiesAdapter.addEntities(vm.getLocalEntities())
             }
         }
+    }
+
+    private fun attachReconnectedListener() {
+
+        NetworkUtils.reconnectedLiveData.observe(viewLifecycleOwner) {
+            if (it == false) return@observe
+
+            Utils.toast(activity, "Reconnected, pushing updates to server.")
+            val uncommitted = vm.getUncommitted()
+            val updated = vm.getUpdated()
+
+            uncommitted.forEach { dbEntity ->
+                vm.postEntity(EntityDTO(
+                    null,
+                    dbEntity.name,
+                    dbEntity.quantity,
+                    dbEntity.date,
+                    dbEntity.isFavourite,
+                )).observe(viewLifecycleOwner) {
+                    if (CallStatus.manageCallStatus(it, LayoutAffectedByApiCall(activity)) && it is CallStatus.Success) {
+                        val id = it.businessPayload!!.payload!!.id!!
+
+                        vm.setCommitted(dbEntity.localId)
+                        vm.setIdToLocalEntity(id, dbEntity.localId)
+                        entitiesAdapter.setIdOf(dbEntity.localId, id)
+                    }
+                }
+            }
+
+            updated.forEach { dbEntity ->
+                vm.patch(EntityDTO(
+                    null,
+                    dbEntity.name,
+                    dbEntity.quantity,
+                    dbEntity.date,
+                    dbEntity.isFavourite,
+                ), dbEntity.id!!).observe(viewLifecycleOwner) {
+                    if (CallStatus.manageCallStatus(it, LayoutAffectedByApiCall(activity)) && it is CallStatus.Success) {
+                        vm.setCommitted(dbEntity.localId)
+                    }
+                }
+            }
+        }
+
     }
 
 }

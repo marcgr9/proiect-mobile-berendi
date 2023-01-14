@@ -11,6 +11,7 @@ import ro.marc.android.activity.main.MainVM
 import ro.marc.android.data.api.CallStatus
 import ro.marc.android.data.api.CallStatus.Companion.LayoutAffectedByApiCall
 import ro.marc.android.data.api.dto.EntityDTO
+import ro.marc.android.data.db.entity.LocalEntityStatus
 import ro.marc.android.data.model.Entity
 import ro.marc.android.databinding.FragMainEditBinding
 import ro.marc.android.util.NetworkUtils
@@ -63,7 +64,7 @@ class MainEdit: Fragment() {
                             }
                         }
                         false -> {
-                            vm.saveLocalEntity(Entity(-1, -1, binding.name.text.toString(), binding.quantity.text.toString().toInt(), Utils.getDateFromString(binding.date.text.toString())!!, binding.favourite.isChecked))
+                            vm.saveLocalEntity(Entity(null, null, binding.name.text.toString(), binding.quantity.text.toString().toInt(), Utils.getDateFromString(binding.date.text.toString())!!, binding.favourite.isChecked))
                             activity.navigateToHome()
                         }
                     }
@@ -95,7 +96,11 @@ class MainEdit: Fragment() {
                             }
                         }
                         false -> {
-                            vm.update(vm.entity!!.localId!!, Entity(vm.entity!!.localId, -1, binding.name.text.toString(), binding.quantity.text.toString().toInt(), Utils.getDateFromString(binding.date.text.toString())!!, binding.favourite.isChecked))
+                            vm.update(
+                                vm.entity!!.localId!!,
+                                Entity(vm.entity!!.localId, null, binding.name.text.toString(), binding.quantity.text.toString().toInt(), Utils.getDateFromString(binding.date.text.toString())!!, binding.favourite.isChecked),
+                                if (vm.entity!!.id != null) LocalEntityStatus.UPDATED else LocalEntityStatus.NEW
+                            )
                             activity.navigateToHome()
                         }
                     }
