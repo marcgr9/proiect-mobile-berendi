@@ -1,10 +1,17 @@
 package ro.marc.android.util
 
 import android.content.Context
+import android.content.Intent
+import android.view.View
 import android.widget.Toast
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import ro.marc.android.activity.login.Login
+import ro.marc.android.data.model.Entity
+import ro.marc.android.databinding.CompItemBinding
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 object Utils {
@@ -34,6 +41,28 @@ object Utils {
             .build()
 
         return Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).client(okHttpClient).build()
+    }
+
+    fun logout(ctx: Context) {
+        ctx.getSharedPreferences("app", Context.MODE_PRIVATE).edit()
+            .clear()
+            .commit()
+
+        ctx.startActivity(Intent(
+            ctx,
+            Login::class.java,
+        ))
+    }
+
+    fun formatDate(date: Date): String = SimpleDateFormat("dd-MM-yyyy").format(date)
+
+    fun getDateFromString(date: String) = SimpleDateFormat("dd-MM-yyyy").parse(date)
+
+    fun fillEntityCard(item: CompItemBinding, entity: Entity) {
+        item.name.text = entity.name
+        item.quantity.text = entity.quantity.toString()
+        item.date.text = formatDate(entity.date)
+        item.favourite.visibility = if (entity.isFavourite) View.VISIBLE else View.INVISIBLE
     }
 
 }

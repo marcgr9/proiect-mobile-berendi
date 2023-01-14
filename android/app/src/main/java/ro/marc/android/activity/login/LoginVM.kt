@@ -1,4 +1,4 @@
-package ro.marc.android.activity
+package ro.marc.android.activity.login
 
 import androidx.lifecycle.ViewModel
 import ro.marc.android.data.UserRepo

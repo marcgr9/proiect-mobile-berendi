@@ -17,7 +17,7 @@
         tools:targetApi="31">
 
         <activity
-            android:name="ro.marc.android.activity.Login"
+            android:name="ro.marc.android.activity.login.Login"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -26,10 +26,10 @@
             </intent-filter>
         </activity>
 
-<!--        <activity-->
-<!--            android:name="ro.marc.university.activity.main.MainActivity"-->
-<!--            android:screenOrientation="portrait"-->
-<!--            android:windowSoftInputMode="adjustPan" />-->
+        <activity
+            android:name="ro.marc.android.activity.main.MainActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
 
     </application>
 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/mainHome">
+
+    <fragment
+        android:id="@+id/mainHome"
+        android:name="ro.marc.android.activity.main.fragment.MainHome"
+        android:label="MainHome">
+
+        <action
+            android:id="@+id/action_mainHome_to_mainEdit"
+            app:destination="@id/mainEdit" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/mainEdit"
+        android:name="ro.marc.android.activity.main.fragment.MainEdit"
+        android:label="MainEdit">
+
+        <action
+            android:id="@+id/action_mainEdit_to_mainHome"
+            app:destination="@id/mainHome" />
+    </fragment>
+
+</navigation>

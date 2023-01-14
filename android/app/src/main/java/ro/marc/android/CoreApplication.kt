@@ -8,7 +8,8 @@ import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 import org.koin.core.module.Module
 import org.koin.dsl.module
-import ro.marc.android.activity.LoginVM
+import ro.marc.android.activity.login.LoginVM
+import ro.marc.android.activity.main.MainVM
 import ro.marc.android.data.UserRepo
 import ro.marc.android.data.UserService
 import ro.marc.android.util.Utils
@@ -45,6 +46,9 @@ class CoreApplication: Application() {
         return module {
             viewModel {
                 LoginVM(get())
+            }
+            viewModel {
+                MainVM()
             }
         }
     }
