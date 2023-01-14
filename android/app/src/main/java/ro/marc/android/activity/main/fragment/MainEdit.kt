@@ -8,6 +8,9 @@ import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import ro.marc.android.activity.main.MainActivity
 import ro.marc.android.activity.main.MainVM
+import ro.marc.android.data.api.CallStatus
+import ro.marc.android.data.api.CallStatus.Companion.LayoutAffectedByApiCall
+import ro.marc.android.data.api.dto.EntityDTO
 import ro.marc.android.data.model.Entity
 import ro.marc.android.databinding.FragMainEditBinding
 import ro.marc.android.util.NetworkUtils
@@ -20,12 +23,15 @@ class MainEdit: Fragment() {
     private var _binding: FragMainEditBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var layout: LayoutAffectedByApiCall
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         activity = requireActivity() as MainActivity
         val injectedViewModel by sharedViewModel<MainVM>()
         vm = injectedViewModel
         _binding = FragMainEditBinding.inflate(inflater, container, false)
 
+        layout = LayoutAffectedByApiCall(activity)
 
         configureLayout()
 
@@ -44,7 +50,17 @@ class MainEdit: Fragment() {
                 binding.save.setOnClickListener {
                     when (NetworkUtils.hasNetwork) {
                         true -> {
-                            // todo
+                            vm.postEntity(EntityDTO(
+                                null,
+                                binding.name.text.toString(),
+                                binding.quantity.text.toString().toInt(),
+                                Utils.getDateFromString(binding.date.text.toString())!!,
+                                binding.favourite.isChecked
+                            )).observe(viewLifecycleOwner) {
+                                if (CallStatus.manageCallStatus(it, layout) && it is CallStatus.Success) {
+                                    activity.navigateToHome()
+                                }
+                            }
                         }
                         false -> {
                             vm.saveLocalEntity(Entity(-1, -1, binding.name.text.toString(), binding.quantity.text.toString().toInt(), Utils.getDateFromString(binding.date.text.toString())!!, binding.favourite.isChecked))
@@ -63,7 +79,20 @@ class MainEdit: Fragment() {
                 binding.save.setOnClickListener {
                     when (NetworkUtils.hasNetwork) {
                         true -> {
-                            // todo
+                            vm.patch(
+                                EntityDTO(
+                                    null,
+                                    binding.name.text.toString(),
+                                    binding.quantity.text.toString().toInt(),
+                                    Utils.getDateFromString(binding.date.text.toString())!!,
+                                    binding.favourite.isChecked
+                                ),
+                                vm.entity!!.id!!,
+                            ).observe(viewLifecycleOwner) {
+                                if (CallStatus.manageCallStatus(it, layout) && it is CallStatus.Success) {
+                                    activity.navigateToHome()
+                                }
+                            }
                         }
                         false -> {
                             vm.update(vm.entity!!.localId!!, Entity(vm.entity!!.localId, -1, binding.name.text.toString(), binding.quantity.text.toString().toInt(), Utils.getDateFromString(binding.date.text.toString())!!, binding.favourite.isChecked))

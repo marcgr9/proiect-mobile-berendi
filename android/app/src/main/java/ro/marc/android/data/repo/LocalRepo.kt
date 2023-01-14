@@ -39,4 +39,8 @@ class LocalRepo(
         return Utils.asEntity(dao.getByLocalId(localId))
     }
 
+    fun clear() {
+        dao.removeAll()
+    }
+
 }

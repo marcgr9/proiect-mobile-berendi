@@ -13,8 +13,10 @@ import org.koin.dsl.module
 import ro.marc.android.activity.login.LoginVM
 import ro.marc.android.activity.main.MainVM
 import ro.marc.android.data.db.Database
+import ro.marc.android.data.repo.EntitiesRepo
 import ro.marc.android.data.repo.LocalRepo
 import ro.marc.android.data.repo.UserRepo
+import ro.marc.android.data.service.EntitiesService
 import ro.marc.android.data.service.UserService
 import ro.marc.android.util.Utils
 
@@ -44,6 +46,7 @@ class CoreApplication: Application() {
         return module {
             single { UserRepo(Utils.getRetrofit("http://10.0.2.2:8080", applicationContext).create(UserService::class.java)) }
             single { LocalRepo(get()) }
+            single { EntitiesRepo(Utils.getRetrofit("http://10.0.2.2:8080", applicationContext).create(EntitiesService::class.java)) }
         }
     }
 
@@ -53,7 +56,7 @@ class CoreApplication: Application() {
                 LoginVM(get())
             }
             viewModel {
-                MainVM(get())
+                MainVM(get(), get())
             }
         }
     }

@@ -11,9 +11,13 @@ import ro.marc.android.R
 import ro.marc.android.activity.main.MainActivity
 import ro.marc.android.activity.main.MainVM
 import ro.marc.android.activity.main.adapter.EntityAdapter
+import ro.marc.android.data.api.CallStatus
+import ro.marc.android.data.api.CallStatus.Companion.LayoutAffectedByApiCall
+import ro.marc.android.data.db.entity.LocalEntityStatus
 import ro.marc.android.data.model.Entity
 import ro.marc.android.databinding.FragMainHomeBinding
 import ro.marc.android.util.NetworkUtils
+import ro.marc.android.util.Utils
 
 class MainHome: Fragment() {
 
@@ -60,9 +64,19 @@ class MainHome: Fragment() {
     private fun populate() {
         when (NetworkUtils.hasNetwork) {
             true -> {
-                // todo
+                vm.getEntities().observe(viewLifecycleOwner) {
+                    if (CallStatus.manageCallStatus(it, LayoutAffectedByApiCall(activity)) && it is CallStatus.Success) {
+                        vm.clearLocalEntities()
+                        entitiesAdapter.clearEntities()
+                        it.businessPayload!!.payload!!.forEach { dto ->
+                            vm.saveLocalEntity(Utils.asEntity(dto), LocalEntityStatus.COMMITTED)
+                        }
+                        entitiesAdapter.addEntities(vm.getLocalEntities())
+                    }
+                }
             }
             false -> {
+                vm.clearLocalEntities()
                 entitiesAdapter.clearEntities()
                 entitiesAdapter.addEntities(vm.getLocalEntities())
             }

@@ -4,10 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.Toast
+import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ro.marc.android.activity.login.Login
+import ro.marc.android.data.api.dto.EntityDTO
 import ro.marc.android.data.db.entity.DbEntity
 import ro.marc.android.data.model.Entity
 import ro.marc.android.databinding.CompItemBinding
@@ -41,7 +43,8 @@ object Utils {
             }
             .build()
 
-        return Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).client(okHttpClient).build()
+        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
+        return Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create(gson)).client(okHttpClient).build()
     }
 
     fun logout(ctx: Context) {
@@ -68,11 +71,20 @@ object Utils {
 
     fun asEntity(entity: DbEntity) = Entity(
         entity.localId,
-        null,
+        entity.id,
         entity.name,
         entity.quantity,
         entity.date,
         entity.isFavourite
+    )
+
+    fun asEntity(dto: EntityDTO) = Entity(
+        null,
+        dto.id,
+        dto.name,
+        dto.quantity,
+        dto.date,
+        dto.isFavourite
     )
 
 }
