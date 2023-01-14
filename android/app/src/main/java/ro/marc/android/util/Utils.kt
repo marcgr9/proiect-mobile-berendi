@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ro.marc.android.activity.login.Login
+import ro.marc.android.data.db.entity.DbEntity
 import ro.marc.android.data.model.Entity
 import ro.marc.android.databinding.CompItemBinding
 import java.text.SimpleDateFormat
@@ -64,5 +65,14 @@ object Utils {
         item.date.text = formatDate(entity.date)
         item.favourite.visibility = if (entity.isFavourite) View.VISIBLE else View.INVISIBLE
     }
+
+    fun asEntity(entity: DbEntity) = Entity(
+        entity.localId,
+        null,
+        entity.name,
+        entity.quantity,
+        entity.date,
+        entity.isFavourite
+    )
 
 }

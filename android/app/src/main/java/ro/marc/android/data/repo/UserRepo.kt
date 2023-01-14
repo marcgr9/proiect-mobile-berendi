@@ -1,10 +1,11 @@
-package ro.marc.android.data
+package ro.marc.android.data.repo
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import ro.marc.android.data.service.UserService
 import ro.marc.android.data.api.BusinessPayload
 import ro.marc.android.data.api.CallManagement
 import ro.marc.android.data.api.CallStatus

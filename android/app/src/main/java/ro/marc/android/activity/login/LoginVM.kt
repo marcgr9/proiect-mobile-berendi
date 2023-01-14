@@ -1,7 +1,7 @@
 package ro.marc.android.activity.login
 
 import androidx.lifecycle.ViewModel
-import ro.marc.android.data.UserRepo
+import ro.marc.android.data.repo.UserRepo
 
 class LoginVM(
     private val userRepo: UserRepo

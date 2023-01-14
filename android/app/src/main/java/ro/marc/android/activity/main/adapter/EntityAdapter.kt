@@ -18,8 +18,8 @@ class EntityAdapter(
         get() = _entities
 
     @SuppressLint("NotifyDataSetChanged")
-    fun addEntities(trans: List<Entity>) {
-        this._entities.addAll(trans)
+    fun addEntities(entities: List<Entity>) {
+        this._entities.addAll(entities)
         notifyDataSetChanged()
     }
 

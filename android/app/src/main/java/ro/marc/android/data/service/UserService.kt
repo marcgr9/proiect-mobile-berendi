@@ -1,4 +1,4 @@
-package ro.marc.android.data
+package ro.marc.android.data.service
 
 import retrofit2.Call
 import retrofit2.http.Body

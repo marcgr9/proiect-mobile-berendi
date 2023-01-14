@@ -34,4 +34,8 @@ class MainActivity: CoreActivity(R.layout.activity_main) {
         navController!!.navigate(R.id.action_mainHome_to_mainEdit)
     }
 
+    fun navigateToHome() {
+        navController!!.navigate(R.id.action_mainEdit_to_mainHome)
+    }
+
 }
