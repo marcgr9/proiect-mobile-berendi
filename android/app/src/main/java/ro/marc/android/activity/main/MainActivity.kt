@@ -3,9 +3,11 @@ package ro.marc.android.activity.main
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import androidx.navigation.fragment.NavHostFragment
 import ro.marc.android.CoreActivity
 import ro.marc.android.R
+import ro.marc.android.util.NetworkUtils
 import ro.marc.android.util.Utils
 
 class MainActivity: CoreActivity(R.layout.activity_main) {
@@ -18,6 +20,10 @@ class MainActivity: CoreActivity(R.layout.activity_main) {
 
         findViewById<Button>(R.id.logout).setOnClickListener {
             Utils.logout(this)
+        }
+
+        NetworkUtils.reconnectedLiveData.observe(this) {
+            findViewById<TextView>(R.id.network).text = if (NetworkUtils.hasNetwork == true) "online" else "offline"
         }
     }
 
