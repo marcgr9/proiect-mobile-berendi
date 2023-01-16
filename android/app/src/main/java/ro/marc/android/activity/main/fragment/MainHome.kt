@@ -3,7 +3,6 @@ package ro.marc.android.activity.main.fragment
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -49,6 +48,10 @@ class MainHome: Fragment() {
 
         binding.post.setOnClickListener {
             activity.navigateToEdit()
+        }
+
+        binding.camera.setOnClickListener {
+            activity.dispatchTakePictureIntent()
         }
 
         binding.rv.apply {
@@ -137,21 +140,13 @@ class MainHome: Fragment() {
     }
 
     private fun showNotification() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "channel"
-            val descriptionText = "description"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("1", name, importance).apply {
-                description = descriptionText
-            }
-            // Register the channel with the system
-            val notificationManager: NotificationManager =
-                activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
+        val channel = NotificationChannel("1", "channel", NotificationManager.IMPORTANCE_DEFAULT).apply {
+            description = "description"
         }
+        val notificationManager = activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
 
-
-        var builder = NotificationCompat.Builder(activity, "1")
+        val builder = NotificationCompat.Builder(activity, "1")
             .setSmallIcon(R.drawable.ic_launcher_background)
             .setContentTitle("Synchronized with the server")
             .setContentText("One item was pushed to the server")
@@ -161,7 +156,6 @@ class MainHome: Fragment() {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         with(NotificationManagerCompat.from(activity)) {
-            // notificationId is a unique int for each notification that you must define
             notify(1, builder.build())
         }
     }

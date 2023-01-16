@@ -15,6 +15,16 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
+            android:id="@+id/camera"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/round_button"
+            android:text="C"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <Button
             android:id="@+id/post"
             android:layout_width="48dp"
             android:layout_height="48dp"
